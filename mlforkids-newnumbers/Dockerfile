@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM registry.cn-beijing.aliyuncs.com/xrunda-public/python:3.11
 
 RUN apt update
 RUN apt install fonts-liberation -qqy

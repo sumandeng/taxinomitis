@@ -13,6 +13,10 @@ const STATIC_CACHE_PREFIXES = [
   '/scratch/chunks/',
   '/static/bower_components/'
 ];
+const SITE_HOSTNAMES = [
+  'machinelearningforkids.co.uk',
+  'ml.xrunda.com'
+];
 const STATIC_CACHE_SECONDS = 7 * 24 * 60 * 60;
 
 
@@ -64,7 +68,7 @@ function isStaticCacheable(request) {
       return false;
     }
     const url = new URL(request.url);
-    return url.hostname === 'machinelearningforkids.co.uk' &&
+    return SITE_HOSTNAMES.includes(url.hostname) &&
            STATIC_CACHE_PREFIXES.some((prefix) => url.pathname.startsWith(prefix));
   }
   catch (err) {
@@ -76,7 +80,7 @@ function isStaticCacheable(request) {
 
 async function handle(request) {
   const url = new URL(request.url);
-  if (url.hostname === 'machinelearningforkids.co.uk') {
+  if (SITE_HOSTNAMES.includes(url.hostname)) {
     if (url.pathname.startsWith('/scratch/')) {
       return handleGeoSteeredRequest(request, 'mlforkids-scratch.', url.pathname.substring(8));
     }

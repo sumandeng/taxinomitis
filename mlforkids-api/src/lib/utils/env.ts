@@ -32,6 +32,7 @@ export const SMTP_PASS = 'SMTP_PASS';
 export const SMTP_REPLY_TO = 'SMTP_REPLY_TO';
 const MAINTENANCE_MODE = 'MAINTENANCE_MODE';
 export const CLOUDFLARE_TURNSTILE_SECRET_KEY = 'CLOUDFLARE_TURNSTILE_SECRET_KEY';
+export const CLOUDFLARE_TURNSTILE_ENABLED = 'CLOUDFLARE_TURNSTILE_ENABLED';
 
 
 const DEFAULT = [
@@ -54,11 +55,17 @@ const PROD = [
 
 export function confirmRequiredEnvironment() {
     if (deployment.isProdDeployment()) {
-        PROD.forEach(checkEnv);
+        PROD.filter((name) => {
+            return name !== CLOUDFLARE_TURNSTILE_SECRET_KEY;
+        }).forEach(checkEnv);
     }
     else {
         DEFAULT.forEach(checkEnv);
     }
+}
+
+export function isTurnstileEnabled() {
+    return process.env[CLOUDFLARE_TURNSTILE_ENABLED] !== 'false';
 }
 
 

@@ -16,6 +16,7 @@ export $(grep -v '^#' dev-credentials.env | xargs)
 docker run --rm -it \
     --platform=linux/amd64 \
     --env-file dev-credentials.env \
+    -e CLOUDFLARE_TURNSTILE_ENABLED=${CLOUDFLARE_TURNSTILE_ENABLED:-true} \
     -h ml-for-kids-local.net \
     -p $PORT:$PORT \
     --name taxinomitis \

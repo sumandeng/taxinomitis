@@ -157,6 +157,13 @@
 
         <script async defer src="https://scripts.withcabin.com/hello.js"></script>
 
-        <script defer src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script>
+        <script>
+            if (TURNSTILE_ENABLED) {
+                var turnstileScript = document.createElement('script');
+                turnstileScript.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+                turnstileScript.defer = true;
+                document.head.appendChild(turnstileScript);
+            }
+        </script>
     </body>
 </html>

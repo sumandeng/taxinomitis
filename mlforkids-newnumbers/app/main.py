@@ -29,7 +29,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://machinelearningforkids.co.uk"
+        "https://machinelearningforkids.co.uk",
+        "https://ml.xrunda.com"
     ]
 )
 

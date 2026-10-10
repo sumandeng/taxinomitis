@@ -672,6 +672,7 @@ async function trainNewClassifierLocalProject(req: Express.Request, res: Express
 const CORS_CONFIG = {
     origin: [
         /machinelearningforkids\.co\.uk$/,
+        /^https?:\/\/ml\.xrunda\.com(?::\d+)?$/,
         /app\.edublocks\.org$/,
         // /localhost:3000$/,
         // /ml-for-kids-local\.net:3000$/,

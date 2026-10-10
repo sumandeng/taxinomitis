@@ -15,4 +15,5 @@ echo "Building 'local' version of the $DOCKER_IMAGE image for local development 
 docker build \
     ../ \
     --platform linux/amd64 \
+    --build-arg CLOUDFLARE_TURNSTILE_ENABLED=${CLOUDFLARE_TURNSTILE_ENABLED:-true} \
     -t $DOCKER_ORG/$DOCKER_IMAGE:local

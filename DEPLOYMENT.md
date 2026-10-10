@@ -40,6 +40,8 @@ An instance of [Cloud Internet Services](https://www.ibm.com/cloud/cloud-interne
 | machinelearningforkids.co.uk/scratch | mlforkids-scratch | *caching means most requests are served immediately from Cloud Internet Services layer* |
 | proxy.machinelearningforkids.co.uk   | mlforkids-proxies |
 | machinelearningforkids.co.uk         | mlforkids-api     |
+| ml.xrunda.com/scratch                 | mlforkids-scratch | Alias domain; route through the same edge function as the primary hostname |
+| ml.xrunda.com                          | mlforkids-api     | Alias domain for the main site |
 
 *The HTTP endpoint provided by **mlforkids-numbers** is only accessible within the namespace where it is running, and is only called by the **mlforkids-api** instance in the same region as it.*
 

@@ -43,7 +43,7 @@
             vm.confirm = function (newClassDetails) {
                 vm.creating = true;
 
-                if (!document.getElementById('turnstile-container')) {
+                if (TURNSTILE_ENABLED && !document.getElementById('turnstile-container')) {
                     displayAlert('errors', 500, {
                         message : 'Update required. Please refresh the page. If this persists, please clear your cache.'
                     });
@@ -51,6 +51,46 @@
                 }
 
                 loggerService.debug('[ml4ksignup] Creating new class', newClassDetails);
+                var createTeacher = function (token) {
+                    if (!vm.complete) {
+                        usersService.createTeacher(
+                            newClassDetails.username,
+                            newClassDetails.email,
+                            newClassDetails.intendeduse,
+                            token
+                        )
+                            .then(function (resp) {
+                                loggerService.debug('[ml4ksignup] Created class', resp);
+
+                                var newId = alertId++;
+                                vm.infos.push({
+                                    alertid : newId,
+                                    password : resp.password
+                                });
+                                scrollService.scrollToNewItem('infos' + newId);
+
+                                vm.complete = true;
+                            })
+                            .catch(function (err) {
+                                vm.creating = false;
+
+                                loggerService.error('[ml4ksignup] Failed to create class', err);
+
+                                if (err && err.data && err.data.error && err.data.error.includes('turnstile')) {
+                                    $scope.turnstileerror = err.data.error;
+                                }
+                                else {
+                                    displayAlert('errors', 500, err.data);
+                                }
+                            });
+                    }
+                };
+
+                if (!TURNSTILE_ENABLED) {
+                    createTeacher(null);
+                    return;
+                }
+
                 turnstile.render("#turnstile-container", {
                     sitekey: TURNSTILE_SITE_KEY,
                     'error-callback': function (err) {
@@ -59,40 +99,7 @@
                         $scope.turnstileerror = err;
                         vm.creating = false;
                     },
-                    callback: function (token) {
-                        if (!vm.complete) {
-                            usersService.createTeacher(
-                                newClassDetails.username,
-                                newClassDetails.email,
-                                newClassDetails.intendeduse,
-                                token
-                            )
-                                .then(function (resp) {
-                                    loggerService.debug('[ml4ksignup] Created class', resp);
-
-                                    var newId = alertId++;
-                                    vm.infos.push({
-                                        alertid : newId,
-                                        password : resp.password
-                                    });
-                                    scrollService.scrollToNewItem('infos' + newId);
-
-                                    vm.complete = true;
-                                })
-                                .catch(function (err) {
-                                    vm.creating = false;
-
-                                    loggerService.error('[ml4ksignup] Failed to create class', err);
-
-                                    if (err && err.data && err.data.error && err.data.error.includes('turnstile')) {
-                                        $scope.turnstileerror = err.data.error;
-                                    }
-                                    else {
-                                        displayAlert('errors', 500, err.data);
-                                    }
-                                });
-                        }
-                    }
+                    callback: createTeacher
                 });
             };
         }

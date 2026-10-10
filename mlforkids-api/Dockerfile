@@ -2,7 +2,11 @@
 # build the app
 # ###############################################
 
-FROM node:26 AS builder
+FROM registry.cn-beijing.aliyuncs.com/xrunda-public/node:26 AS builder
+
+# Set to false for deployments that do not use Turnstile.
+ARG CLOUDFLARE_TURNSTILE_ENABLED=true
+ENV CLOUDFLARE_TURNSTILE_ENABLED=${CLOUDFLARE_TURNSTILE_ENABLED}
 
 # don't run as root
 USER node
@@ -40,7 +44,11 @@ RUN ls -l /usr/src/build
 # prepare app image
 # ###############################################
 
-FROM node:26
+FROM registry.cn-beijing.aliyuncs.com/xrunda-public/node:26
+
+# Keep this aligned with the build argument above; runtime API validation uses it.
+ARG CLOUDFLARE_TURNSTILE_ENABLED=true
+ENV CLOUDFLARE_TURNSTILE_ENABLED=${CLOUDFLARE_TURNSTILE_ENABLED}
 
 # don't run as root
 USER node

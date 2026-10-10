@@ -22,12 +22,12 @@ function createSessionUser(req: Express.Request, res: Express.Response)
 {
     const requestOrigin = req.header('cf-ipcountry');
 
-    if (!req.body.turnstile) {
+    if (turnstile.isEnabled() && !req.body.turnstile) {
         return res.status(httpstatus.BAD_REQUEST)
             .json({ error: 'A turnstile token is required to start a session' });
     }
 
-    turnstile.validate(req.body.turnstile)
+    (turnstile.isEnabled() ? turnstile.validate(req.body.turnstile) : Promise.resolve(true))
         .then((validRequest) => {
             if (validRequest) {
                 return sessionusers.createSessionUser(requestOrigin)

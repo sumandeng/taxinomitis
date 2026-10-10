@@ -4,10 +4,16 @@ import loggerSetup from '../utils/logger';
 
 const log = loggerSetup();
 
+export function isEnabled(): boolean {
+    return env.isTurnstileEnabled();
+}
 
 
 
 export function validate(token: string): Promise<boolean> {
+    if (!isEnabled()) {
+        return Promise.resolve(true);
+    }
     if (!token || typeof token !== 'string' || token.length === 0 || token.length > 2048) {
         // invalid token
         log.error({ token }, 'Invalid turnstile token');

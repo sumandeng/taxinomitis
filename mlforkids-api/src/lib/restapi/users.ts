@@ -62,12 +62,12 @@ async function createTeacher(req: Express.Request, res: Express.Response) {
         return res.status(httpstatus.BAD_REQUEST)
                    .send({ error : 'Invalid username. Use letters, numbers, hyphens and underscores, only.' });
     }
-    if (!req.body.turnstile) {
+    if (turnstile.isEnabled() && !req.body.turnstile) {
         return res.status(httpstatus.BAD_REQUEST)
             .send({ error: 'A turnstile token is required to create a new class' });
     }
 
-    const validRequest = await turnstile.validate(req.body.turnstile);
+    const validRequest = turnstile.isEnabled() ? await turnstile.validate(req.body.turnstile) : true;
     if (!validRequest) {
         return res.status(httpstatus.BAD_REQUEST)
             .send({ error: 'A valid turnstile token is required to create a new class' });

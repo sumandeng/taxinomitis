@@ -76,6 +76,8 @@ console.log(`  Processing ${webJsFiles.length} JavaScript files...`);
 
 // Apply ng-annotate to each file individually and build sources object
 const sources = {};
+const turnstileEnabled = process.env.CLOUDFLARE_TURNSTILE_ENABLED !== 'false';
+sources['turnstile-config.js'] = `var TURNSTILE_ENABLED = ${turnstileEnabled};`;
 for (const file of webJsFiles) {
     if (fs.existsSync(file)) {
         const content = fs.readFileSync(file, 'utf8');
@@ -129,5 +131,4 @@ for (const file of webJsFiles) {
         process.exit(1);
     }
 })();
-
 
